@@ -1,6 +1,18 @@
+import argparse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
+
+# Define a function to parse command-line arguments
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Scrape SMS messages from online-sms.org")
+    parser.add_argument("phone_number", type=str, help="Phone number for the SMS page")
+    parser.add_argument("start_page", type=int, help="Starting page number")
+    parser.add_argument("end_page", type=int, help="Ending page number")
+    return parser.parse_args()
+
+# Parse command-line arguments
+args = parse_arguments()
 
 # Initialize a Selenium webdriver
 driver = webdriver.Chrome()  # You'll need to have the Chrome driver installed and in your PATH
@@ -8,9 +20,9 @@ driver = webdriver.Chrome()  # You'll need to have the Chrome driver installed a
 # Create a list to store SMS messages
 sms_messages = []
 
-base_url = "https://online-sms.org/free-phone-number-15746215096?page="
+base_url = f"https://online-sms.org/free-phone-number-{args.phone_number}?page="
 
-for page_number in range(1, 605):  # Loop from page 1 to 604
+for page_number in range(args.start_page, args.end_page + 1):
     url = base_url + str(page_number)
 
     # Navigate to the webpage
@@ -36,8 +48,9 @@ for page_number in range(1, 605):  # Loop from page 1 to 604
 driver.quit()
 
 # Extract SMS messages and save them to a text file
-with open("sms_messages.txt", "w") as file:
+with open("sms_messages.txt", "a") as file:
     for message in sms_messages:
         file.write(message + "\n")
+    file.write("*" * 80 + "\n")
 
-print("All SMS messages have been scraped and saved to 'sms.txt'.")
+print("All SMS messages have been scraped and saved to 'sms_messages.txt'.")
