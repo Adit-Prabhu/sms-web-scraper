@@ -22,6 +22,9 @@ with open('sms_messages.txt', 'r') as infile, open('parsed_companies.txt', 'w') 
         r'Tap to reset your (\w+) password:',
     ]
 
+    # Create a dictionary to store company names and their counts
+    company_counts = {}
+
     # Function to extract company name from a message
     def extract_company_name(message):
         for pattern in company_keywords:
@@ -30,10 +33,15 @@ with open('sms_messages.txt', 'r') as infile, open('parsed_companies.txt', 'w') 
                 return match.group(1)
         return None
 
-    # Iterate through the messages and extract company names, then write to the output file
+    # Iterate through the messages and extract company names, then update the counts
     for message in messages:
         company_name = extract_company_name(message)
         if company_name:
-            outfile.write(company_name + '\n')
+            company_counts[company_name] = company_counts.get(company_name, 0) + 1
 
-print("Company names extracted and saved to parsed_companies.txt.")
+    # Write company names and their counts to the output file
+    for company, count in company_counts.items():
+        outfile.write(f"{company}: {count}\n")
+
+print("Company names and their counts extracted and saved to parsed_companies.txt.")
+
