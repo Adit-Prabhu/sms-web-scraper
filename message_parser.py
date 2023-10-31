@@ -39,8 +39,10 @@ with open('sms_messages.txt', 'r') as infile, open('parsed_companies.txt', 'w') 
         if company_name:
             company_counts[company_name] = company_counts.get(company_name, 0) + 1
 
+    sorted_companies = sorted(company_counts.items(), key=lambda x: len(x[0]))
+
     # Write company names and their counts to the output file
-    for company, count in company_counts.items():
+    for company, count in sorted_companies:
         outfile.write(f"{company}: {count}\n")
 
 print("Company names and their counts extracted and saved to parsed_companies.txt.")
