@@ -18,7 +18,7 @@ vectorizer = TfidfVectorizer()
 tfidf_matrix = vectorizer.fit_transform(messages)
 
 # Apply K-means clustering to categorize the messages into different groups
-num_clusters = 10  # Adjust this based on the number of clusters you want
+num_clusters = 20  # Adjust this based on the number of clusters you want
 kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 cluster_labels = kmeans.fit_predict(tfidf_matrix)
 
